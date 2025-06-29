@@ -1,8 +1,9 @@
 services:
   - type: web
-    name: Fraud Detection System
+    name: fraud-detection-system
     env: python
     buildCommand: pip install -r requirements.txt
     startCommand: gunicorn app:app
-    region: oregon
-    plan: free
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.10.13

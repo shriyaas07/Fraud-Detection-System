@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Fraud Detection System</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="background-shape"></div>
+
+    <div class="container custom-container">
+        <div class="row align-items-center g-5">
+            <!-- Left Content -->
+            <div class="col-md-6 text-white">
+                <div class="text-center text-md-start">
+                    <img src="{{ url_for('static', filename='logo.png') }}" alt="Logo" class="mb-3 rounded shadow" width="200">
+                    <h1 class="fw-bold mb-3">Fraud Detection System</h1>
+                    <p class="lead mb-4">Enter transaction details to detect fraudulent activity .</p>
+                    
+                    <form method="POST" action="/predict" onsubmit="showLoader()">
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label class="form-label text-white">Transaction Amount:</label>
+                                <input type="number" step="0.01" name="transaction_amount" class="form-control" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label text-white">Transaction Type:</label>
+                                <select name="transaction_type" class="form-select">
+                                    <option>Online</option>
+                                    <option>POS</option>
+                                    <option>ATM</option>
+                                    <option>Transfer</option>
+                                </select>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label class="form-label text-white">Device Type:</label>
+                                <select name="device_type" class="form-select">
+                                    <option>Desktop</option>
+                                    <option>Mobile</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label text-white">Is Foreign Transaction?</label>
+                                <select name="is_foreign_transaction" class="form-select">
+                                    <option>No</option>
+                                    <option>Yes</option>
+                                </select>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label class="form-label text-white">Is New Location?</label>
+                                <select name="is_new_location" class="form-select">
+                                    <option>No</option>
+                                    <option>Yes</option>
+                                </select>
+                            </div>
+
+                            <!-- Advanced Fields Toggle -->
+                            <div class="col-12">
+                                <a class="btn btn-sm btn-outline-light mt-2" data-bs-toggle="collapse" href="#advancedFields" role="button">
+                                    + Advanced Fields
+                                </a>
+                                <div class="collapse mt-3" id="advancedFields">
+                                    <div class="row g-3">
+                                        <div class="col-md-6">
+                                            <label class="form-label text-white">Failed Logins (24h):</label>
+                                            <input type="number" name="failed_logins_24h" class="form-control" value="0">
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label class="form-label text-white">Transactions (24h):</label>
+                                            <input type="number" name="transactions_last_24h" class="form-control" value="3">
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label class="form-label text-white">Avg Transaction Amount:</label>
+                                            <input type="number" step="0.01" name="avg_transaction_amount" class="form-control" value="2000">
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label class="form-label text-white">Time Since Last Transaction (min):</label>
+                                            <input type="number" name="time_since_last_txn" class="form-control" value="45">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-12 text-center mt-4">
+                                <button type="submit" class="btn btn-warning px-5 fw-bold">Predict</button>
+                                <div class="spinner-border text-light mt-3" id="loadingSpinner" role="status" style="display:none;"></div>
+                            </div>
+                        </div>
+                    </form>
+
+                    {% if prediction %}
+                        <div id="result-box" class="alert mt-4 fw-bold {{ 'alert-success' if 'Safe' in prediction else 'alert-danger' }}">
+                            {{ prediction }}
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Right Image -->
+            <div class="col-md-6 text-center d-none d-md-block">
+                <img src="{{ url_for('static', filename='fraud-graphic.png') }}" alt="Illustration" class="img-fluid float-img rounded shadow-lg">
+            </div>
+        </div>
+
+        <footer class="text-center mt-5 small text-white">
+            &copy; 2025 Fraud Detection System. All rights reserved.
+        </footer>
+    </div>
+
+    <script>
+        function showLoader() {
+            document.getElementById('loadingSpinner').style.display = 'inline-block';
+        }
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
